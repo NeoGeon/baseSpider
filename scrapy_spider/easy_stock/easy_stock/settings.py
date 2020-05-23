@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for stock project
+# Scrapy settings for easy_stock project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,17 +9,17 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'stock'
+BOT_NAME = 'easy_stock'
 
-SPIDER_MODULES = ['stock.spiders']
-NEWSPIDER_MODULE = 'stock.spiders'
+SPIDER_MODULES = ['easy_stock.spiders']
+NEWSPIDER_MODULE = 'easy_stock.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'stock (+http://www.yourdomain.com)'
+#USER_AGENT = 'easy_stock (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -47,14 +47,14 @@ ROBOTSTXT_OBEY = True
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'stock.middlewares.StockSpiderMiddleware': 543,
+#    'easy_stock.middlewares.EasyStockSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'stock.middlewares.StockDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+    'easy_stock.middlewares.StockMiddleware': 543,
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
@@ -64,11 +64,9 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-ITEM_PIPELINES = {
-    'scrapy.pipelines.images.ImagesPipeline': 1,
-    'stock.pipelines.SelfDefineFilePipeline': 2,
-}
-FILES_STORE = 'stock/history_data'
+#ITEM_PIPELINES = {
+#    'easy_stock.pipelines.EasyStockPipeline': 300,
+#}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

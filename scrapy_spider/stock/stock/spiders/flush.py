@@ -1,30 +1,37 @@
 # -*- coding: utf-8 -*-
 import scrapy
-
+from bs4 import BeautifulSoup
+from stock.items import StockItem
 
 class FlushSpider(scrapy.Spider):
     name = 'flush'
     headers = {
-            'Referer': '',
-            'User-Agent:'}
+            'Referer': 'http://quotes.money.163.com/',
+            'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'}
     #allowed_domains = []
     start_urls = ['http://www.iwencai.com/stockpick/search?ts=1&f=1&qs=stockhome_topbar_click&w=%E5%8F%A3%E7%BD%A9']
 
+
+    def __init__(self):
+        scrapy.Spider.__init__(self)
+        self.stock_list = ['600508']
+
     def start_requests(self):
-        for stock code in list(self.stock_lost):
-            self.curr_stock_code = str(stock_code.get('stock_id'))
+        for stock_code in list(self.stock_list):
+            self.curr_stock_code = str(stock_code)
             url = 'http://quotes.money.163.com/trade/lsjysj_{}.html'.format(self.curr_stock_code)
-            yield scrapy.Request(url=url, header=self.headers, callback=self.parse)
+            print url
+            yield scrapy.Request(url=url, headers=self.headers, callback=self.parse)
 
     def parse(self, response):
         text = response.text
-        soup = bs(text, 'lxml')
+        print text
+        soup = BeautifulSoup(text, 'lxml')
         start_time = soup.find('input', {'name': 'date_start_type'}).get('value').replace('-','')
         end_time = soup.find('input', {'name':'date_end_type'}).get('value').replace('-', '')
-        time.sleep(random.choice([1,2]))
 
-        file_time = StockItem()
-        if len(self.current_stock_code) > 0:
+        file_item = StockItem()
+        if len(self.curr_stock_code) > 0:
             stock_code_a = str(self.curr_stock_code)
             if int(stock_code_a[0]) in (0,2,3,6,9):
                 if int(stock_code_a[0]) in [6,9]:

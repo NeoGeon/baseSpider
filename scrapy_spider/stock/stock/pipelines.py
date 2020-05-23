@@ -12,7 +12,7 @@ class StockPipeline(object):
         return item
 class SelfDefineFilePipeline(FilesPipeline):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(SelfDefineFilePipeline, self).__init__(*args, **kwargs)
 
     def file_path(self, request, response=None, info=None):
         str_temp = str(request.url)
