@@ -2,6 +2,8 @@
 import scrapy
 from bs4 import BeautifulSoup
 from stock.items import StockItem
+import time
+import random
 
 class FlushSpider(scrapy.Spider):
     name = 'flush'
@@ -14,22 +16,24 @@ class FlushSpider(scrapy.Spider):
 
     def __init__(self):
         scrapy.Spider.__init__(self)
-        self.stock_list = ['600508']
+        self.stock_list = []
+        with open('stock_file', 'r') as f:
+            for l in f:
+                self.stock_list.append(l[:-1])
 
     def start_requests(self):
         for stock_code in list(self.stock_list):
             self.curr_stock_code = str(stock_code)
+            print stock_code
             url = 'http://quotes.money.163.com/trade/lsjysj_{}.html'.format(self.curr_stock_code)
-            print url
             yield scrapy.Request(url=url, headers=self.headers, callback=self.parse)
 
     def parse(self, response):
         text = response.text
-        print text
         soup = BeautifulSoup(text, 'lxml')
+        print 'cur',self.curr_stock_code
         start_time = soup.find('input', {'name': 'date_start_type'}).get('value').replace('-','')
         end_time = soup.find('input', {'name':'date_end_type'}).get('value').replace('-', '')
-
         file_item = StockItem()
         if len(self.curr_stock_code) > 0:
             stock_code_a = str(self.curr_stock_code)
@@ -41,5 +45,5 @@ class FlushSpider(scrapy.Spider):
                         new_stock_code = '1' + stock_code_a
             download_url = 'http://quotes.money.163.com/service/chddata.html?code={}&start={}&end={}&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP'.format(new_stock_code, start_time, end_time)
             file_item['file_urls'] = [download_url]
-            yield file_item
+        yield file_item
 
